@@ -2,6 +2,22 @@
  * Created by Alar on 12/03/2016.
  */
 public class Diagonaalne_Võit extends Võidukontroll {
+
+    // Kontrollib esimest või teist diagonaali, sõltuvalt "first_if_true" tõeväärtusest.
+    public static void diagonalCheck(boolean first_if_true){
+        for (int i = 0; i < ROW_AMT; i++) {
+            if (Mänguväli.field[i][first_if_true?i:COL_AMT - i - 1] != (player1Turn?1:2)) {
+                if (player1Turn) {
+                    player1Won = false;
+                }
+                else {
+                    player2Won = false;
+                }
+                break;
+            }
+        }
+    }
+
     public static void checkDiagonalVictory() {
         boolean onFirstDiagonal = currentRow == currentCol;
         boolean onSecondDiagonal = currentRow == COL_AMT - currentCol - 1;
@@ -19,39 +35,12 @@ public class Diagonaalne_Võit extends Võidukontroll {
 
         // Kontrollib millise diagonaaliga on tegemist
         if (onFirstDiagonal) {
-            for (int i = 0; i < ROW_AMT; i++) {
-                if (field[i][i] != (player1Turn?1:2)) {
-                    if (player1Turn) {
-                        player1Won = false;
-                    }
-                    else {
-                        player2Won = false;
-                    }
-                    break;
-                }
-            }
+            diagonalCheck(true);
         }
         if (onSecondDiagonal) {
-            for (int i = 0; i < ROW_AMT; i++) {
-                if (field[i][COL_AMT - i - 1] != (player1Turn?1:2)) {
-                    if (player1Turn) {
-                        player1Won = false;
-                    }
-                    else {
-                        player2Won = false;
-                    }
-                    break;
-                }
-            }
+            diagonalCheck(false);
         }
 
-        if (player1Won) {
-            System.out.println("M�ngija 1 v�itis.");
-            System.exit(0);
-        }
-        else if (player2Won) {
-            System.out.println("M�ngija 2 v�itis.");
-            System.exit(0);
-        }
+        whoWon();
     }
 }

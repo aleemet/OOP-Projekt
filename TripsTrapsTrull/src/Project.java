@@ -1,3 +1,4 @@
+/*
 // Packages
 //package tictactoe;
 
@@ -172,7 +173,8 @@ class Project {
 	}
 	
 	public static void printGrid() {
-		/*
+		*/
+/*
 		
 	     O | X | X 
 	    -----------
@@ -180,7 +182,8 @@ class Project {
 		-----------
 	       |   | O 
 	    siin visandasin v�ljaku
-		*/
+		*//*
+
 		for (int i = 0; i < ROW_AMT; i++) {
 			for (int j = 0; j < COL_AMT; j++) {
 				if (field[i][j] == 0) {
@@ -232,3 +235,4 @@ class Project {
         }
 	}
 }
+*/

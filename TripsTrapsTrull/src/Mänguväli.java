@@ -1,9 +1,9 @@
 /**
  * Created by Alar on 12/03/2016.
  */
-public class Väljasta_Mänguväli {
-    public static final int ROW_AMT = 3; // Ridade arv v�ljal
-    public static final int COL_AMT = 3; // Tulpade arv v�ljal
+public class Mänguväli {
+    public static final int ROW_AMT = 3; // Ridade arv väljal
+    public static final int COL_AMT = 3; // Tulpade arv väljal
     public static int[][] field = new int[ROW_AMT][COL_AMT];
 
     public static void updateGrid() {

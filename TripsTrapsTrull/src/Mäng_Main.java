@@ -6,7 +6,7 @@ public class Mäng_Main {
         int ctr = 0;
         while (ctr < 11) {
             Suhtlemine_Mängijaga.askPlayerMove();
-            Väljasta_Mänguväli.updateGrid();
+            Mänguväli.updateGrid();
             Võidukontroll.checkGameOver();
             Võidukontroll.changeMove();
 
