@@ -26,18 +26,16 @@ public class Diagonaalne_Võit extends Võidukontroll {
             return;
         }
 
-        if (player1Turn) {
-            player1Won = true;
-        }
-        else {
-            player2Won = true;
-        }
 
         // Kontrollib millise diagonaaliga on tegemist
         if (onFirstDiagonal) {
+            whosTurn();
             diagonalCheck(true);
         }
+        whoWon();
+
         if (onSecondDiagonal) {
+            whosTurn();
             diagonalCheck(false);
         }
 

@@ -12,13 +12,14 @@ public class Mänguväli {
     }
     public static void printGrid() {
 		/*
+		Väli näeb välja selline:
 
 	     O | X | X
 	    -----------
 	     X |   |
 		-----------
 	       |   | O
-	    siin visandasin v�ljaku
+
 		*/
         for (int i = 0; i < ROW_AMT; i++) {
             for (int j = 0; j < COL_AMT; j++) {

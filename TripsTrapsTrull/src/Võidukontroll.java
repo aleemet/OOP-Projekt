@@ -28,9 +28,18 @@ public class Võidukontroll {
         }
     }
 
+    public static void whosTurn(){
+        if (player1Turn) {
+            player1Won = true;
+        }
+        else {
+            player2Won = true;
+        }
+    }
+
     public static void checkVictory() {
         // Horisontaalkontroll
-        Risti_Võit.checkHorizontalVictory();
+        Risti_Võit.checkCrossVictory();
 
         // Vertikaalkontroll
         //Vertikaalne_Võit.checkVerticalVictory();

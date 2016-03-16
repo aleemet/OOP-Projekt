@@ -1,4 +1,7 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
+
 
 /**
  * Created by Alar on 12/03/2016.
@@ -6,25 +9,41 @@ import java.util.Scanner;
 
 public class Suhtlemine_Mängijaga {
     public static Scanner scanner = new Scanner(System.in);
+    public static ArrayList<Integer> lubatud_arvud = new ArrayList<Integer>(Arrays.asList(0,1,2));
+
     public static void askPlayerMove() {
-        System.out.println("Sisestage kaks tühikuga eraldatud numbrit.");
-        System.out.println("Esimene number tähistab rida ja teine number tähistab tulpa.");
+        int sisend1;
+        int sisend2;
+        while (true) {
+            System.out.println("\nSisestage kaks numbrit.");
+            System.out.println("Numbrid tohivad olla ainult 0, 1 ja 2.");
+            System.out.println("Esimene number tähistab rida ja teine number tähistab tulpa.");
 
-        // Kui sisestatud vähem kui 3 märki.
-        String[] intsAsStr = scanner.nextLine().split(" ");
-        if (intsAsStr.length < 2) {
-            System.out.println("Sisestasid vigased andmed!");
-            askPlayerMove();
-        }
-        // Kui sisestatud väljal on juba märk tehtud.
-        if (Mänguväli.field[Integer.parseInt(intsAsStr[0])][Integer.parseInt(intsAsStr[1])] != 0){
-            System.out.println("See koht on juba hõivatud!!");
-            askPlayerMove();
-        }
+            // Loeme sisse kasutaja antud numbrid.
+            String intsAsStr = scanner.nextLine();
+            sisend1 = Character.getNumericValue(intsAsStr.charAt(0));
+            sisend2 = Character.getNumericValue(intsAsStr.charAt(1));
 
-        else{
-            Võidukontroll.currentRow = Integer.parseInt(intsAsStr[0]);
-            Võidukontroll.currentCol = Integer.parseInt(intsAsStr[1]);
+
+            // Kui sisestati arve, mis ei ole  hulgas {0,1,2}
+            if (!lubatud_arvud.contains(sisend1) || !lubatud_arvud.contains(sisend2)) {
+                System.out.println("Seda välja pole!");
+                continue;
+            }
+            // Kui sisestati vähem/rohkem kui 2 märki.
+            if (intsAsStr.length()!= 2) {
+                System.out.println("Sisestasid liiga vähe/palju andmeid!");
+                continue;
+            }
+            // Kui sisestatud väljal on juba märk tehtud.
+            if (Mänguväli.field[sisend1][sisend2] != 0) {
+                System.out.println("See koht on juba hõivatud!!");
+                continue;
+            }
+            break;
         }
+        Võidukontroll.currentRow = sisend1;
+        Võidukontroll.currentCol = sisend2;
+
     }
 }
