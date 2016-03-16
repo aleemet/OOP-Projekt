@@ -8,9 +8,10 @@ import java.util.Scanner;
  */
 
 public class Suhtlemine_Mängijaga {
-    public static Scanner scanner = new Scanner(System.in);
-    public static ArrayList<Integer> lubatud_arvud = new ArrayList<Integer>(Arrays.asList(0,1,2));
+    public static Scanner scanner = new Scanner(System.in); // Sisendi küsimise tagamine.
+    public static ArrayList<Integer> lubatud_arvud = new ArrayList<Integer>(Arrays.asList(0,1,2)); // Sobilike arvude lisamine listi.
 
+    // Mängijaga suhtlemine ja sisendi kontroll
     public static void askPlayerMove() {
         int sisend1;
         int sisend2;
@@ -42,6 +43,8 @@ public class Suhtlemine_Mängijaga {
             }
             break;
         }
+
+        // Sisendi lisamine rea ja veeru muutujasse.
         Võidukontroll.currentRow = sisend1;
         Võidukontroll.currentCol = sisend2;
 
