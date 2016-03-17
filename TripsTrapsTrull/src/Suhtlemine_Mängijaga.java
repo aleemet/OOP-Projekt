@@ -23,17 +23,20 @@ public class Suhtlemine_Mängijaga {
 
             // Loeme sisse kasutaja antud numbri.
             String intsAsStr = scanner.nextLine();
+
+            // Kui sisestati vähem/rohkem kui 1 märk.
+            if (intsAsStr.length()!= 1) {
+                System.out.println("Sisestasid liiga vähe/palju andmeid!");
+                continue;
+            }
+            // Teisendame sisestuse arvuks.
             int sisestus = Character.getNumericValue(intsAsStr.charAt(0));
 
             if (sisestus == 0) {
                 System.out.println("Seda välja pole!");
                 continue;
             }
-            // Kui sisestati vähem/rohkem kui 2 märki.
-            if (intsAsStr.length()!= 1) {
-                System.out.println("Sisestasid liiga vähe/palju andmeid!");
-                continue;
-            }
+
             // Määrame mängia sisendile vastava mänguvälja koordinaadi.
             if (sisestus == 1) {
                 sisend1 = 0;
@@ -70,6 +73,10 @@ public class Suhtlemine_Mängijaga {
             else if (sisestus == 9){
                 sisend1 = 2;
                 sisend2 = 2;
+            }
+            else {
+                System.out.println("Vale sisend!");
+                continue;
             }
 
 
