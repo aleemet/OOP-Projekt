@@ -18,7 +18,7 @@ public class Suhtlemine_Mängijaga {
         // Küsime sisendit senikaua, kuni kasutaja sisestab korrektse sisendi.
         while (true) {
             System.out.println("\nSisestage üks number.");
-            System.out.println("Number tohivad olla ainult vahemikust 1-9.");
+            System.out.println("Number tohib olla ainult vahemikust 1-9.");
             System.out.println("Esimene rida on 1-3, teine rida 4-6, kolmas rida 7-9.");
 
             // Loeme sisse kasutaja antud numbri.
@@ -79,14 +79,12 @@ public class Suhtlemine_Mängijaga {
                 continue;
             }
 
-
             // Kui sisestatud väljal on juba märk tehtud.
             if (Mänguväli.field[sisend1][sisend2] != 0) {
                 System.out.println("See väli on juba hõivatud!");
                 continue;
             }
-
-
+            
             break;
         }
 
