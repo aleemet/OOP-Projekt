@@ -9,38 +9,77 @@ import java.util.Scanner;
 
 public class Suhtlemine_Mängijaga {
     public static Scanner scanner = new Scanner(System.in); // Sisendi küsimise tagamine.
-    public static ArrayList<Integer> lubatud_arvud = new ArrayList<Integer>(Arrays.asList(0,1,2)); // Sobilike arvude lisamine listi.
-
     // Mängijaga suhtlemine ja sisendi kontroll
     public static void askPlayerMove() {
-        int sisend1;
-        int sisend2;
+        // Vaikimisi väärtused, et vältida kompileerimisaegset viga.
+        int sisend1 = 0;
+        int sisend2 = 0;
+
+        // Küsime sisendit senikaua, kuni kasutaja sisestab korrektse sisendi.
         while (true) {
-            System.out.println("\nSisestage kaks numbrit.");
-            System.out.println("Numbrid tohivad olla ainult 0, 1 ja 2.");
-            System.out.println("Esimene number tähistab rida ja teine number tähistab tulpa.");
+            System.out.println("\nSisestage üks number.");
+            System.out.println("Number tohivad olla ainult vahemikust 1-9.");
+            System.out.println("Esimene rida on 1-3, teine rida 4-6, kolmas rida 7-9.");
 
-            // Loeme sisse kasutaja antud numbrid.
+            // Loeme sisse kasutaja antud numbri.
             String intsAsStr = scanner.nextLine();
-            sisend1 = Character.getNumericValue(intsAsStr.charAt(0));
-            sisend2 = Character.getNumericValue(intsAsStr.charAt(1));
+            int sisestus = Character.getNumericValue(intsAsStr.charAt(0));
 
-
-            // Kui sisestati arve, mis ei ole  hulgas {0,1,2}
-            if (!lubatud_arvud.contains(sisend1) || !lubatud_arvud.contains(sisend2)) {
+            if (sisestus == 0) {
                 System.out.println("Seda välja pole!");
                 continue;
             }
             // Kui sisestati vähem/rohkem kui 2 märki.
-            if (intsAsStr.length()!= 2) {
+            if (intsAsStr.length()!= 1) {
                 System.out.println("Sisestasid liiga vähe/palju andmeid!");
                 continue;
             }
+            // Määrame mängia sisendile vastava mänguvälja koordinaadi.
+            if (sisestus == 1) {
+                sisend1 = 0;
+                sisend2 = 0;
+            }
+            else if (sisestus == 2){
+                sisend1 = 0;
+                sisend2 = 1;
+            }
+            else if (sisestus == 3){
+                sisend1 = 0;
+                sisend2 = 2;
+            }
+            else if (sisestus == 4){
+                sisend1 = 1;
+                sisend2 = 0;
+            }
+            else if (sisestus == 5){
+                sisend1 = 1;
+                sisend2 = 1;
+            }
+            else if (sisestus == 6){
+                sisend1 = 1;
+                sisend2 = 2;
+            }
+            else if (sisestus == 7){
+                sisend1 = 2;
+                sisend2 = 0;
+            }
+            else if (sisestus == 8){
+                sisend1 = 2;
+                sisend2 = 1;
+            }
+            else if (sisestus == 9){
+                sisend1 = 2;
+                sisend2 = 2;
+            }
+
+
             // Kui sisestatud väljal on juba märk tehtud.
             if (Mänguväli.field[sisend1][sisend2] != 0) {
-                System.out.println("See koht on juba hõivatud!!");
+                System.out.println("See väli on juba hõivatud!");
                 continue;
             }
+
+
             break;
         }
 

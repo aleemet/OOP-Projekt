@@ -3,6 +3,7 @@
  */
 public class Mäng_Main {
     public static void main(String[] args) {
+        Võidukontroll.whoStarts();
         int ctr = 0;
         while (ctr < 11) {
             Suhtlemine_Mängijaga.askPlayerMove();

@@ -1,3 +1,5 @@
+import java.util.Random;
+
 /**
  * Created by Alar on 12/03/2016.
  */
@@ -10,7 +12,7 @@ public class Võidukontroll {
     // Võidukontrolli isendid
     public static int currentRow;
     public static int currentCol;
-    public static boolean player1Turn = true;
+    public static boolean player1Turn;
     public static int moveCount = 1;
 
     // Võitja määramine
@@ -63,5 +65,18 @@ public class Võidukontroll {
         player1Turn = !player1Turn;
         moveCount++;
     }
+
+    public static void whoStarts(){
+        Random generaator = new Random();
+        if (generaator.nextInt(101)%2 == 0) {
+            player1Turn = false;
+            System.out.println("O alustab.");
+        }
+        else{
+            player1Turn = true;
+            System.out.println("X alustab.");
+        }
+    }
+
 
 }
