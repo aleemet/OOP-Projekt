@@ -84,7 +84,7 @@ public class Suhtlemine_Mängijaga {
                 System.out.println("See väli on juba hõivatud!");
                 continue;
             }
-            
+
             break;
         }
 
