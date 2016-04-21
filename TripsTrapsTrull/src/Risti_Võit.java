@@ -6,8 +6,8 @@ public class Risti_Võit extends Võidukontroll {
     // Kontrollib rida või veergu, sõltuvalt "row_if_true" tõeväärtusest.
     // Kui row_if_true on tõene, kontrollitakse ridu, vastasel juhul veerge.
     public static void checkCross(boolean row_if_true, int row_col){
-        for (int j = 0; j < (row_if_true?Mänguväli.ROW_AMT:Mänguväli.COL_AMT); j++) {
-            if (Mänguväli.field[row_if_true?row_col:j][row_if_true?j:row_col] != (Võidukontroll.isPlayer1Turn()?1:2)) { // https://en.wikipedia.org/wiki/%3F:
+        for (int j = 0; j < (row_if_true?Mänguväli.getRowAmt():Mänguväli.getColAmt()); j++) {
+            if (Mänguväli.getField()[row_if_true?row_col:j][row_if_true?j:row_col] != (Võidukontroll.isPlayer1Turn()?1:2)) { // https://en.wikipedia.org/wiki/%3F:
                 if (Võidukontroll.isPlayer1Turn()) {
                     Võidukontroll.setPlayer1Won(false);
                 }
@@ -25,9 +25,10 @@ public class Risti_Võit extends Võidukontroll {
         whosTurn();
         checkCross(true, Võidukontroll.getCurrentRow());
         whoWon();
-
-        whosTurn();
-        checkCross(false, Võidukontroll.getCurrentCol());
-        whoWon();
+        if (!Võidukontroll.isPlayer1Won() && !Võidukontroll.isPlayer2Won()) {
+            whosTurn();
+            checkCross(false, Võidukontroll.getCurrentCol());
+            whoWon();
+        }
     }
 }

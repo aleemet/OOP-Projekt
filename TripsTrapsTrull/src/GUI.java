@@ -6,8 +6,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -16,11 +15,21 @@ import java.io.IOException;
 
 public class GUI extends Application {
 
-    public static void main(String[] args) {
+    private int laius = 550;
+    private int kõrgus = 480;
+
+    public static void teatekast(String lühiteade, String pikemteade){
+        Alert teade = new Alert(Alert.AlertType.INFORMATION, pikemteade, ButtonType.OK);
+        teade.setHeaderText(lühiteade);
+        teade.setTitle("Tulemus");
+        teade.showAndWait();
+    }
+
+    public static void main(String[] args) throws Exception {
         launch(args);
     }
 
-    public static void play(GridPane gp, Button button,Background item){
+    private static void game(GridPane gp, Button button,Background item){
         button.setBackground(item);
         Võidukontroll.setCurrentRow(gp.getRowIndex(button));
         Võidukontroll.setCurrentCol(gp.getColumnIndex(button));
@@ -30,7 +39,7 @@ public class GUI extends Application {
 
     }
 
-    private static GridPane ruudustik(){
+    private static GridPane ruudustik() throws Exception{
         GridPane nupud = new GridPane();
 
         for (int i = 0; i<3; i++){
@@ -47,12 +56,12 @@ public class GUI extends Application {
                 Background ring = new Background(piltring);
                 a.setBackground(tühi);
                 a.setOnAction(event-> {
-                    if (Võidukontroll.isPlayer1Turn() && a.getBackground() == tühi ){
-                        play(nupud, a, rist);
+                    if (Võidukontroll.isPlayer1Turn() && a.getBackground() == tühi && !Võidukontroll.isPlayer1Won() && !Võidukontroll.isPlayer2Won() ){
+                        game(nupud, a, rist);
 
                     }
-                    else if (!Võidukontroll.isPlayer1Turn() && a.getBackground() == tühi ){
-                        play(nupud, a, ring);
+                    else if (!Võidukontroll.isPlayer1Turn() && a.getBackground() == tühi && !Võidukontroll.isPlayer1Won() && !Võidukontroll.isPlayer2Won() ){
+                        game(nupud, a, ring);
 
                     }
                 });
@@ -66,7 +75,7 @@ public class GUI extends Application {
         nupud.setBackground(taust);
         return nupud;
     }
-    private static GridPane valikud(){
+    private GridPane valikud(Stage primaryStage, ChoiceDialog valikukast) throws Exception{
         GridPane nupud = new GridPane();
         Label kelleKäik = new Label("");
         nupud.add(kelleKäik, 0,0);
@@ -78,30 +87,71 @@ public class GUI extends Application {
         }
 
         Button uusMäng = new Button("Uus mäng");
+        uusMäng.setOnAction(event ->{
+            primaryStage.close();
+            try {
+                resetGame();
+                Võidukontroll.whoStarts();
+                gameTypeFriend(laius, kõrgus, primaryStage, valikukast);
+            } catch (Exception e) {
+                System.out.println("Mingi tõrge");
+                System.exit(1);
+            }
+        });
         nupud.add(uusMäng, 0,1);
+
+        Button vahetaVastast = new Button("Vaheta vastast");
+        vahetaVastast.setOnAction(event->{
+            try {
+                primaryStage.close();
+                resetGame();
+                start(primaryStage);
+            } catch (Exception e) {
+                System.out.println("Mingi IO tõrge");
+                System.exit(1);
+            }
+        });
+        nupud.add(vahetaVastast, 0,2);
+
         return nupud;
     }
 
+    private void resetGame(){
+        Võidukontroll.setMoveCount(1);
+        Mänguväli.resetField();
+        Võidukontroll.setPlayer1Won(false);
+        Võidukontroll.setPlayer2Won(false);
+    }
 
-    @Override
-    public void start(Stage primaryStage) throws IOException {
-        Võidukontroll.whoStarts();
-        int laius = 550;
-        int kõrgus = 480;
-
+    private void gameTypeFriend(int laius, int kõrgus, Stage primaryStage, ChoiceDialog valikukast)throws Exception{
         Group root = new Group();
-
         GridPane gp = new GridPane();
-
-
         GridPane mänguväli = ruudustik();
         gp.add(mänguväli, 0,0);
-        GridPane valikud = valikud();
+        GridPane valikud = valikud(primaryStage, valikukast);
         gp.add(valikud, 1,0);
-
         root.getChildren().addAll(gp);
         Scene scene = new Scene(root, laius, kõrgus);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        ChoiceDialog<String> valikukast = new ChoiceDialog<>("Sõber","Arvuti");
+        valikukast.setTitle("Vali vastane");
+        valikukast.setHeaderText("Kelle vastu mängida soovid?");
+        valikukast.showAndWait();
+        Võidukontroll.whoStarts();
+
+        if (valikukast.getResult().equals("Sõber")){
+            gameTypeFriend(laius, kõrgus, primaryStage, valikukast);
+        }
+        if (valikukast.getResult().equals("Arvuti")){
+            System.out.println("See funktsionaalsus puudub.");
+            System.exit(0);
+        }
+
     }
 }

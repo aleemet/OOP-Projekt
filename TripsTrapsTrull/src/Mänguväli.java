@@ -3,9 +3,9 @@
  */
 public class Mänguväli {
     // Väljak ja väljaku mõõtmete isendid
-    public static final int ROW_AMT = 3; // Ridade arv väljal
-    public static final int COL_AMT = 3; // Tulpade arv väljal
-    public static int[][] field = new int[ROW_AMT][COL_AMT];
+    private static final int ROW_AMT = 3; // Ridade arv väljal
+    private static final int COL_AMT = 3; // Tulpade arv väljal
+    private static int[][] field = new int[ROW_AMT][COL_AMT];
 
     // Meetod väljaku värskendamiseks ja väljastamiseks
     public static void updateGrid() {
@@ -13,17 +13,33 @@ public class Mänguväli {
         //printGrid();
     }
 
+    public static int getRowAmt() {
+        return ROW_AMT;
+    }
+
+    public static int getColAmt() {
+        return COL_AMT;
+    }
+
+    public static int[][] getField() {
+        return field;
+    }
+
+    public static void resetField() {
+        Mänguväli.field = new int[ROW_AMT][COL_AMT];
+    }
+
     /*
-		Väljaku väljastamine.
-		Väljak näeb välja selline:
+            Väljaku väljastamine.
+            Väljak näeb välja selline:
 
-	     O | X | X
-	    -----------
-	     X |   |
-		-----------
-	       |   | O
+             O | X | X
+            -----------
+             X |   |
+            -----------
+               |   | O
 
-		*/
+            */
     public static void printGrid() {
 
         for (int i = 0; i < ROW_AMT; i++) {

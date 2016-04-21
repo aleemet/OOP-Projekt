@@ -80,7 +80,7 @@ public class Suhtlemine_Mängijaga {
             }
 
             // Kui sisestatud väljal on juba märk tehtud.
-            if (Mänguväli.field[sisend1][sisend2] != 0) {
+            if (Mänguväli.getField()[sisend1][sisend2] != 0) {
                 System.out.println("See väli on juba hõivatud!");
                 continue;
             }

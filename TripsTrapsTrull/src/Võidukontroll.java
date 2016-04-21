@@ -1,3 +1,7 @@
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
+import java.awt.*;
 import java.util.Random;
 
 /**
@@ -14,6 +18,7 @@ public class Võidukontroll {
     private static int currentCol;
     private static boolean player1Turn = false;
     private static int moveCount = 1;
+
 
     public static boolean isPlayer1Won() {
         return player1Won;
@@ -43,6 +48,10 @@ public class Võidukontroll {
         return moveCount;
     }
 
+    public static void setMoveCount(int moveCount) {
+        Võidukontroll.moveCount = moveCount;
+    }
+
     public static void setCurrentRow(int currentRow) {
         Võidukontroll.currentRow = currentRow;
     }
@@ -62,11 +71,13 @@ public class Võidukontroll {
     // Võitja määramine
     public static void whoWon(){
         if (player1Won) {
-            System.out.println("Mängija 1 võitis.");
+            GUI.teatekast("X võitis", "X võitis! Võid alustada uut mängu.");
+            //System.out.println("Mängija 1 võitis.");
             //System.exit(0);
         }
         else if (player2Won) {
-            System.out.println("Mängija 2 võitis.");
+            GUI.teatekast("O võitis!", "O võitis! Võid alustada uut mängu.");
+            //System.out.println("Mängija 2 võitis.");
             //System.exit(0);
         }
     }
@@ -86,14 +97,16 @@ public class Võidukontroll {
         Risti_Võit.checkCrossVictory();
 
         // Diagonaalkontroll
-        Diagonaalne_Võit.checkDiagonalVictory();
+        if (!player1Won && !player2Won)
+            Diagonaalne_Võit.checkDiagonalVictory();
     }
 
     // Kontrollime, kas tegemist on viigiga
     public static void checkDraw() {
-        isDraw = moveCount == Mänguväli.ROW_AMT * Mänguväli.COL_AMT;
+        isDraw = moveCount == Mänguväli.getRowAmt() * Mänguväli.getColAmt();
         if (isDraw) {
-            System.out.println("Viik");
+            GUI.teatekast("Viik", "Mäng jäi viiki! Võid alustada uut mängu.");
+            //System.out.println("Viik");
             //System.exit(0);
         }
     }
@@ -101,7 +114,8 @@ public class Võidukontroll {
     // Kontrollime, kas on mäng on läbi.
     public static void checkGameOver() {
         checkVictory();
-        checkDraw();
+        if(!player1Won && !player2Won)
+            checkDraw();
     }
 
     // Lidame iga käigu järel käikude arvule ühe juurde.
@@ -114,11 +128,11 @@ public class Võidukontroll {
         Random generaator = new Random();
         if (generaator.nextInt(101)%2 == 0) {
             player1Turn = false;
-            System.out.println("O alustab.");
+            //System.out.println("O alustab.");
         }
         else{
             player1Turn = true;
-            System.out.println("X alustab.");
+            //System.out.println("X alustab.");
         }
     }
 
