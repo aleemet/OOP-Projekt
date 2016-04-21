@@ -89,8 +89,8 @@ public class Suhtlemine_Mängijaga {
         }
 
         // Sisendi lisamine rea ja veeru muutujasse.
-        Võidukontroll.currentRow = sisend1;
-        Võidukontroll.currentCol = sisend2;
+        Võidukontroll.setCurrentRow(sisend1);
+        Võidukontroll.setCurrentCol(sisend2);
 
     }
 }

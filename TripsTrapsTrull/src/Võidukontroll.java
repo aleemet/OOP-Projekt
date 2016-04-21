@@ -6,24 +6,68 @@ import java.util.Random;
 public class Võidukontroll {
 
     // Võidutingimuste isendid
-    public static boolean player1Won = false;
-    public static boolean player2Won = false;
-    public static boolean isDraw = false;
+    private static boolean player1Won = false;
+    private static boolean player2Won = false;
+    private static boolean isDraw = false;
     // Võidukontrolli isendid
-    public static int currentRow;
-    public static int currentCol;
-    public static boolean player1Turn;
-    public static int moveCount = 1;
+    private static int currentRow;
+    private static int currentCol;
+    private static boolean player1Turn = false;
+    private static int moveCount = 1;
+
+    public static boolean isPlayer1Won() {
+        return player1Won;
+    }
+
+    public static boolean isPlayer2Won() {
+        return player2Won;
+    }
+
+    public static boolean isDraw() {
+        return isDraw;
+    }
+
+    public static int getCurrentRow() {
+        return currentRow;
+    }
+
+    public static int getCurrentCol() {
+        return currentCol;
+    }
+
+    public static boolean isPlayer1Turn() {
+        return player1Turn;
+    }
+
+    public static int getMoveCount() {
+        return moveCount;
+    }
+
+    public static void setCurrentRow(int currentRow) {
+        Võidukontroll.currentRow = currentRow;
+    }
+
+    public static void setCurrentCol(int currentCol) {
+        Võidukontroll.currentCol = currentCol;
+    }
+
+    public static void setPlayer1Won(boolean player1Won) {
+        Võidukontroll.player1Won = player1Won;
+    }
+
+    public static void setPlayer2Won(boolean player2Won) {
+        Võidukontroll.player2Won = player2Won;
+    }
 
     // Võitja määramine
     public static void whoWon(){
         if (player1Won) {
             System.out.println("Mängija 1 võitis.");
-            System.exit(0);
+            //System.exit(0);
         }
         else if (player2Won) {
             System.out.println("Mängija 2 võitis.");
-            System.exit(0);
+            //System.exit(0);
         }
     }
 
@@ -50,7 +94,7 @@ public class Võidukontroll {
         isDraw = moveCount == Mänguväli.ROW_AMT * Mänguväli.COL_AMT;
         if (isDraw) {
             System.out.println("Viik");
-            System.exit(0);
+            //System.exit(0);
         }
     }
 

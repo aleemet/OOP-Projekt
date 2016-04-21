@@ -19,7 +19,14 @@ public class GUI extends Application {
         launch(args);
     }
 
-
+    public static void play(GridPane gp, Button button,Background item){
+        button.setBackground(item);
+        Võidukontroll.setCurrentRow(gp.getRowIndex(button));
+        Võidukontroll.setCurrentCol(gp.getColumnIndex(button));
+        Mänguväli.updateGrid();
+        Võidukontroll.checkGameOver();
+        Võidukontroll.changeMove();
+    }
 
     private static GridPane ruudustik(){
         GridPane nupud = new GridPane();
@@ -29,9 +36,26 @@ public class GUI extends Application {
 
 
                 Button a = new Button();
-                a.setPrefSize(83, 83);
+                a.setPrefSize(135, 135);
+                BackgroundImage pilt = new BackgroundImage(new Image("blank.jpg" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT );
+                Background tühi = new Background(pilt);
+                BackgroundImage piltrist = new BackgroundImage(new Image("cross.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT );
+                Background rist = new Background(piltrist);
+                BackgroundImage piltring = new BackgroundImage(new Image("circle.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT );
+                Background ring = new Background(piltring);
+                a.setBackground(tühi);
+                a.setOnAction(event-> {
+                    if (Võidukontroll.isPlayer1Turn() && a.getBackground() == tühi ){
+                        play(nupud, a, rist);
+
+                    }
+                    else if (!Võidukontroll.isPlayer1Turn() && a.getBackground() == tühi ){
+                        play(nupud, a, ring);
+                    }
+                });
                 nupud.add(a, i, j);
-                //nupud.setMargin(a, new Insets(x, y, z, w));
+                nupud.setMargin(a, new Insets(12,11,12,12));
+
             }
         }
         BackgroundImage pilt = new BackgroundImage(new Image("mänguväljak2.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT );
@@ -48,8 +72,9 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        int laius = 450;
-        int kõrgus = 400;
+        Võidukontroll.whoStarts();
+        int laius = 530;
+        int kõrgus = 480;
 
         Group root = new Group();
 

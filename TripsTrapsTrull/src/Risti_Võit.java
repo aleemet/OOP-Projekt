@@ -7,12 +7,12 @@ public class Risti_Võit extends Võidukontroll {
     // Kui row_if_true on tõene, kontrollitakse ridu, vastasel juhul veerge.
     public static void checkCross(boolean row_if_true, int row_col){
         for (int j = 0; j < (row_if_true?Mänguväli.ROW_AMT:Mänguväli.COL_AMT); j++) {
-            if (Mänguväli.field[row_if_true?row_col:j][row_if_true?j:row_col] != (player1Turn?1:2)) { // https://en.wikipedia.org/wiki/%3F:
-                if (player1Turn) {
-                    player1Won = false;
+            if (Mänguväli.field[row_if_true?row_col:j][row_if_true?j:row_col] != (Võidukontroll.isPlayer1Turn()?1:2)) { // https://en.wikipedia.org/wiki/%3F:
+                if (Võidukontroll.isPlayer1Turn()) {
+                    Võidukontroll.setPlayer1Won(false);
                 }
                 else {
-                    player2Won = false;
+                    Võidukontroll.setPlayer2Won(false);
                 }
                 break;
             }
@@ -23,11 +23,11 @@ public class Risti_Võit extends Võidukontroll {
     public static void checkCrossVictory() {
 
         whosTurn();
-        checkCross(true, currentRow);
+        checkCross(true, Võidukontroll.getCurrentRow());
         whoWon();
 
         whosTurn();
-        checkCross(false, currentCol);
+        checkCross(false, Võidukontroll.getCurrentCol());
         whoWon();
     }
 }

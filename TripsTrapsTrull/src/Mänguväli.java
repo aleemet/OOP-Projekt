@@ -9,8 +9,8 @@ public class Mänguväli {
 
     // Meetod väljaku värskendamiseks ja väljastamiseks
     public static void updateGrid() {
-        field[Võidukontroll.currentRow][Võidukontroll.currentCol] = Võidukontroll.player1Turn?1:2;
-        printGrid();
+        field[Võidukontroll.getCurrentRow()][Võidukontroll.getCurrentCol()] = Võidukontroll.isPlayer1Turn()?1:2;
+        //printGrid();
     }
 
     /*
