@@ -2,6 +2,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -68,17 +69,27 @@ public class Võidukontroll {
         Võidukontroll.player2Won = player2Won;
     }
 
+    public static void setPlayer1Turn(boolean player1Turn) {
+        Võidukontroll.player1Turn = player1Turn;
+    }
+
     // Võitja määramine
-    public static void whoWon(){
+    public static void whoWon() throws IOException{
         if (player1Won) {
             GUI.teatekast("X võitis", "X võitis! Võid alustada uut mängu.");
+            try(Logipidaja a = new Logipidaja("mängulogi.txt")){
+                a.write("Käigu järel oli võitja mängija X." + System.lineSeparator()+ System.lineSeparator());
+
+            };
+
             //System.out.println("Mängija 1 võitis.");
             //System.exit(0);
         }
         else if (player2Won) {
             GUI.teatekast("O võitis!", "O võitis! Võid alustada uut mängu.");
-            //System.out.println("Mängija 2 võitis.");
-            //System.exit(0);
+            try(Logipidaja a = new Logipidaja("mängulogi.txt")){
+                a.write("Käigu järel oli võitja mängija O." + System.lineSeparator()+ System.lineSeparator());
+            };
         }
     }
 
@@ -92,7 +103,7 @@ public class Võidukontroll {
         }
     }
     // Kontrollime, kas keegi võitis.
-    public static void checkVictory() {
+    public static void checkVictory() throws IOException{
         // Horisontaal- ja vertikaalkontroll
         Risti_Võit.checkCrossVictory();
 
@@ -102,20 +113,27 @@ public class Võidukontroll {
     }
 
     // Kontrollime, kas tegemist on viigiga
-    public static void checkDraw() {
+    public static void checkDraw() throws IOException{
         isDraw = moveCount == Mänguväli.getRowAmt() * Mänguväli.getColAmt();
         if (isDraw) {
             GUI.teatekast("Viik", "Mäng jäi viiki! Võid alustada uut mängu.");
-            //System.out.println("Viik");
-            //System.exit(0);
+            try(Logipidaja a = new Logipidaja("mängulogi.txt")){
+                a.write("Mäng jäi viiki." + System.lineSeparator()+ System.lineSeparator());
+            };
         }
     }
 
     // Kontrollime, kas on mäng on läbi.
-    public static void checkGameOver() {
+    public static void checkGameOver() throws IOException{
         checkVictory();
-        if(!player1Won && !player2Won)
+        if(!player1Won && !player2Won) {
             checkDraw();
+        }
+        //if(!player1Won && !player2Won && !isDraw){
+            //try(Logipidaja a = new Logipidaja("mängulogi.txt")){
+            //    a.write("Mäng jätkub."+ System.lineSeparator()+""+ System.lineSeparator());
+            //};
+        //}
     }
 
     // Lidame iga käigu järel käikude arvule ühe juurde.

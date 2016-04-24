@@ -1,3 +1,8 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Alar on 12/03/2016.
  */
@@ -6,11 +11,25 @@ public class Mänguväli {
     private static final int ROW_AMT = 3; // Ridade arv väljal
     private static final int COL_AMT = 3; // Tulpade arv väljal
     private static int[][] field = new int[ROW_AMT][COL_AMT];
+    private static List<String> käiguAjad = new ArrayList<>();
 
     // Meetod väljaku värskendamiseks ja väljastamiseks
-    public static void updateGrid() {
+    public static void updateGrid() throws IOException{
         field[Võidukontroll.getCurrentRow()][Võidukontroll.getCurrentCol()] = Võidukontroll.isPlayer1Turn()?1:2;
-        //printGrid();
+        try(Logipidaja a = new Logipidaja("mängulogi.txt")){
+            a.write((Võidukontroll.isPlayer1Turn()?"X":"O") + " sooritas käigu koordinaatidele " + Võidukontroll.getCurrentRow()+", " +  Võidukontroll.getCurrentCol() + ": "+System.lineSeparator());
+            käiguAjad.add(a.getTimeStamp());
+            a.write(System.lineSeparator()+grid()+System.lineSeparator());
+
+        };
+    }
+
+    public static List<String> getKäiguAjad() {
+        return käiguAjad;
+    }
+
+    public static void setKäiguAjad(List<String> käiguAjad) {
+        Mänguväli.käiguAjad = käiguAjad;
     }
 
     public static int getRowAmt() {
@@ -26,7 +45,13 @@ public class Mänguväli {
     }
 
     public static void resetField() {
-        Mänguväli.field = new int[ROW_AMT][COL_AMT];
+        field = new int[ROW_AMT][COL_AMT];
+        käiguAjad.clear();
+
+    }
+
+    public static void undoMove(int koordinaat1, int koordinaat2){
+        field[koordinaat1][koordinaat2] = 0;
     }
 
     /*
@@ -40,29 +65,30 @@ public class Mänguväli {
                |   | O
 
             */
-    public static void printGrid() {
-
+    public static String  grid() {
+        String vastus = "";
         for (int i = 0; i < ROW_AMT; i++) {
             for (int j = 0; j < COL_AMT; j++) {
                 if (field[i][j] == 0) {
-                    System.out.print("   ");
+                    vastus += "   ";
                 }
                 else if (field[i][j] == 1) {
-                    System.out.print(" X ");
+                    vastus += " X ";
                 }
-                else { // field[i][j] == 2
-                    System.out.print(" O ");
+                else if (field[i][j] == 2){
+                    vastus += " O ";
                 }
 
                 if (j != COL_AMT - 1) {
-                    System.out.print("|");
+                    vastus += "|";
                 }
             }
-            System.out.println("");
+            vastus += System.lineSeparator();
 
             if (i != ROW_AMT - 1) {
-                System.out.println("-----------");
+                vastus += "-----------"+System.lineSeparator();
             }
         }
+        return vastus;
     }
 }

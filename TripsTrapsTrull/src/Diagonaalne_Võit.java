@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 /**
  * Created by Alar on 12/03/2016.
  */
@@ -20,7 +22,7 @@ public class Diagonaalne_Võit extends Võidukontroll {
     }
 
     // Meetod mõlema diagonaali järjestikuseks kontrollimiseks.
-    public static void checkDiagonalVictory() {
+    public static void checkDiagonalVictory() throws IOException{
         boolean onFirstDiagonal = Võidukontroll.getCurrentRow() == Võidukontroll.getCurrentCol();
         boolean onSecondDiagonal = Võidukontroll.getCurrentRow() == Mänguväli.getColAmt() - Võidukontroll.getCurrentCol() - 1;
 

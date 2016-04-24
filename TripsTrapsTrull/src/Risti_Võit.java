@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 /**
  * Created by Alar on 12/03/2016.
  */
@@ -20,7 +22,7 @@ public class Risti_Võit extends Võidukontroll {
     }
 
     // Meetod ridade ja veergude järjestikuseks kontrollimiseks.
-    public static void checkCrossVictory() {
+    public static void checkCrossVictory() throws IOException {
 
         whosTurn();
         checkCross(true, Võidukontroll.getCurrentRow());
