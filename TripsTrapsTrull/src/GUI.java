@@ -3,11 +3,17 @@
  */
 
 import javafx.application.Application;
+
+
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -17,8 +23,10 @@ import java.util.List;
 
 public class GUI extends Application {
 
-    private int laius = 550;
+    private int laius = 585;
     private int kõrgus = 480;
+    private double nupuLaius = 100;
+    private double nupuKõrgus = 30;
     private static List<Button> nupuvajutused = new ArrayList<>();
 
     private BackgroundImage pilt = new BackgroundImage(new Image("blank.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT );
@@ -27,6 +35,7 @@ public class GUI extends Application {
     private Background rist = new Background(piltrist);
     private BackgroundImage piltring = new BackgroundImage(new Image("circle.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT );
     private Background ring = new Background(piltring);
+    private Label kelleKäik = new Label("");
 
     public static void teatekast(String lühiteade, String pikemteade) {
         Alert teade = new Alert(Alert.AlertType.INFORMATION, pikemteade, ButtonType.OK);
@@ -35,7 +44,14 @@ public class GUI extends Application {
         teade.showAndWait();
     }
 
-
+    public void setKelleKäik(){
+        if (Võidukontroll.isPlayer1Turn()){
+            kelleKäik.setText("X kord");
+        }
+        else if (!Võidukontroll.isPlayer1Turn()){
+            kelleKäik.setText("O kord");
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         launch(args);
@@ -48,10 +64,11 @@ public class GUI extends Application {
         Mänguväli.updateGrid();
         Võidukontroll.checkGameOver();
         Võidukontroll.changeMove();
+        setKelleKäik();
 
     }
 
-    private GridPane ruudustik() throws Exception{
+    private GridPane ruudustik() throws IOException{
         GridPane nupud = new GridPane();
 
         for (int i = 0; i<3; i++){
@@ -63,7 +80,6 @@ public class GUI extends Application {
 
                 a.setBackground(tühi);
                 a.setOnAction(event-> {
-
                     if (Võidukontroll.isPlayer1Turn() && a.getBackground() == tühi && !Võidukontroll.isPlayer1Won() && !Võidukontroll.isPlayer2Won() ){
                         try {
                             game(nupud, a, rist);
@@ -95,16 +111,12 @@ public class GUI extends Application {
         nupud.setBackground(taust);
         return nupud;
     }
-    private GridPane valikud(Stage primaryStage, ChoiceDialog valikukast) throws Exception{
+    private GridPane valikud(Stage primaryStage, ChoiceDialog valikukast) throws IOException{
         GridPane nupud = new GridPane();
-        Label kelleKäik = new Label("");
+        setKelleKäik();
+        kelleKäik.setPrefSize(nupuLaius, nupuKõrgus);
+        nupud.setMargin(kelleKäik, new Insets(3,3,3,3));
         nupud.add(kelleKäik, 0,0);
-        if (Võidukontroll.isPlayer1Turn()){
-            kelleKäik.setText("X kord");
-        }
-        else if (!Võidukontroll.isPlayer1Turn()){
-            kelleKäik.setText("O kord");
-        }
 
         Button uusMäng = new Button("Uus mäng");
         uusMäng.setOnAction(event ->{
@@ -125,6 +137,8 @@ public class GUI extends Application {
                 System.exit(1);
             }
         });
+        uusMäng.setPrefSize(nupuLaius, nupuKõrgus);
+        nupud.setMargin(uusMäng, new Insets(3,3,3,3));
         nupud.add(uusMäng, 0,1);
 
         Button vahetaVastast = new Button("Vaheta vastast");
@@ -145,23 +159,27 @@ public class GUI extends Application {
                 System.exit(1);
             }
         });
+        vahetaVastast.setPrefSize(nupuLaius, nupuKõrgus);
+        nupud.setMargin(vahetaVastast, new Insets(3,3,3,3));
         nupud.add(vahetaVastast, 0,2);
 
         Button võtaTagasi = new Button("Võta käik tagasi");
         võtaTagasi.setOnAction(event ->{
 
             try {
-                List<String> ajad = Mänguväli.getKäiguAjad();
-                int[] c = new Logilugeja("mängulogi.txt", ajad.get(ajad.size()-1)).viimaneKäik();
-                ajad.remove(ajad.size()-1);
-                Mänguväli.setKäiguAjad(ajad);
+                if (nupuvajutused.size()>0 && !Võidukontroll.isPlayer1Won() && !Võidukontroll.isPlayer2Won() && !Võidukontroll.isDraw()){
+                    List<String> ajad = Mänguväli.getKäiguAjad();
+                    int[] c = new Logilugeja("mängulogi.txt", ajad.get(ajad.size()-1)).viimaneKäik();
+                    ajad.remove(ajad.size()-1);
+                    Mänguväli.setKäiguAjad(ajad);
 
-                if (nupuvajutused.size()>0 && c != null && !Võidukontroll.isPlayer1Won() && !Võidukontroll.isPlayer2Won() && !Võidukontroll.isDraw()){
                     Mänguväli.undoMove(c[0], c[1]);
                     Võidukontroll.setMoveCount(Võidukontroll.getMoveCount()-1);
                     Võidukontroll.setPlayer1Turn(!Võidukontroll.isPlayer1Turn());
+                    setKelleKäik();
                     nupuvajutused.get(nupuvajutused.size()-1).setBackground(tühi);
                     nupuvajutused.remove(nupuvajutused.size()-1);
+
                     try(Logipidaja a = new Logipidaja("mängulogi.txt")){
                         a.write("Käik võeti tagasi. Nüüd on taas " + (Võidukontroll.isPlayer1Turn()?"X":"O")+  " kord." + System.lineSeparator());
                         a.write(System.lineSeparator()+Mänguväli.grid()+System.lineSeparator());
@@ -171,7 +189,7 @@ public class GUI extends Application {
                     if (Võidukontroll.isPlayer1Won() || Võidukontroll.isPlayer2Won() || Võidukontroll.isDraw()){
                         teatekast("Käiku ei võetud tagasi.", "Mäng on juba lõppenud!");
                     }
-                    if (c == null || nupuvajutused.size() == 0){
+                    if (nupuvajutused.size() == 0){
                         teatekast("Käiku ei võetud tagasi.", "Mängus pole veel käike sooritatud!");
                     }
                 }
@@ -180,6 +198,8 @@ public class GUI extends Application {
                 System.exit(1);
             }
         });
+        võtaTagasi.setPrefSize(nupuLaius, nupuKõrgus);
+        nupud.setMargin(võtaTagasi, new Insets(3,3,3,3));
         nupud.add(võtaTagasi, 0,3);
 
         return nupud;
@@ -192,7 +212,7 @@ public class GUI extends Application {
         Võidukontroll.setPlayer2Won(false);
     }
 
-    private void gameTypeFriend(int laius, int kõrgus, Stage primaryStage, ChoiceDialog valikukast)throws Exception{
+    private void gameTypeFriend(int laius, int kõrgus, Stage primaryStage, ChoiceDialog valikukast)throws IOException{
         Group root = new Group();
         GridPane gp = new GridPane();
         GridPane mänguväli = ruudustik();
@@ -201,18 +221,44 @@ public class GUI extends Application {
         gp.add(valikud, 1,0);
         root.getChildren().addAll(gp);
         Scene scene = new Scene(root, laius, kõrgus);
+        scene.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ESCAPE){
+                väljuMängust().showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.YES)
+                        primaryStage.close();
+                        System.exit(1);
+                    if (response == ButtonType.NO)
+                        väljuMängust().close();
+                });
+            }
+        });
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
+    public Dialog väljuMängust(){
+        Dialog väljuMängust = new Dialog();
+        väljuMängust.setTitle("Väljumine");
+        väljuMängust.setHeaderText("Kas soovite mängust väljuda?");
+        väljuMängust.getDialogPane().getButtonTypes().add(ButtonType.YES);
+        väljuMängust.getDialogPane().getButtonTypes().add(ButtonType.NO);
+        return väljuMängust;
+    }
+
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws IOException {
         ChoiceDialog<String> valikukast = new ChoiceDialog<>("Sõber","Arvuti");
         valikukast.setTitle("Vali vastane");
         valikukast.setHeaderText("Kelle vastu mängida soovid?");
+        valikukast.setOnCloseRequest(event -> {
+            System.exit(0);
+        });
         valikukast.showAndWait();
         Võidukontroll.whoStarts();
+
+
+        //primaryStage.addEventHandler(KeyEvent);
 
         if (valikukast.getResult().equals("Sõber")){
             try(Logipidaja a = new Logipidaja("mängulogi.txt")){
