@@ -2,9 +2,9 @@
  * Created by Alar on 07/04/2016.
  */
 
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
-
-
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,11 +74,8 @@ public class GUI extends Application {
 
         for (int i = 0; i<3; i++){
             for (int j = 0; j<3; j++){
-
-
                 Button a = new Button();
                 a.setPrefSize(135, 135);
-
                 a.setBackground(tühi);
                 a.setOnAction(event-> {
                     if (Võidukontroll.isPlayer1Turn() && a.getBackground() == tühi && !Võidukontroll.isPlayer1Won() && !Võidukontroll.isPlayer2Won() ){
@@ -88,7 +86,6 @@ public class GUI extends Application {
                             System.out.println("IOException 1: logi tegemine risti paigutamisel");
                             System.exit(0);
                         }
-
                     }
                     else if (!Võidukontroll.isPlayer1Turn() && a.getBackground() == tühi && !Võidukontroll.isPlayer1Won() && !Võidukontroll.isPlayer2Won() ){
                         try {
@@ -98,17 +95,25 @@ public class GUI extends Application {
                             System.out.println("IOException 2: logi tegemine ringi paigutamisel");
                             System.exit(0);
                         }
-
                     }
                 });
                 nupud.add(a, i, j);
                 nupud.setMargin(a, new Insets(12,11,12,12));
+                nupud.setOnMouseClicked(event ->{
+                    FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.01), nupud);
+                    fadeTransition.setFromValue(1);
+                    fadeTransition.setToValue(0.5);
+                    fadeTransition.setAutoReverse(true);
+                    fadeTransition.setCycleCount(2);
+                    fadeTransition.play();
+                });
 
             }
         }
         BackgroundImage pilt = new BackgroundImage(new Image("mänguväljak2.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT );
         Background taust = new Background(pilt);
         nupud.setBackground(taust);
+
         return nupud;
     }
     private GridPane valikud(Stage primaryStage, ChoiceDialog valikukast) throws IOException{
@@ -224,11 +229,12 @@ public class GUI extends Application {
         scene.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ESCAPE){
                 väljuMängust().showAndWait().ifPresent(response -> {
-                    if (response == ButtonType.YES)
+                    if (response == ButtonType.YES) {
                         primaryStage.close();
                         System.exit(1);
-                    if (response == ButtonType.NO)
+                    }else {
                         väljuMängust().close();
+                    }
                 });
             }
         });
@@ -242,6 +248,7 @@ public class GUI extends Application {
         väljuMängust.setHeaderText("Kas soovite mängust väljuda?");
         väljuMängust.getDialogPane().getButtonTypes().add(ButtonType.YES);
         väljuMängust.getDialogPane().getButtonTypes().add(ButtonType.NO);
+
         return väljuMängust;
     }
 
@@ -251,23 +258,22 @@ public class GUI extends Application {
         ChoiceDialog<String> valikukast = new ChoiceDialog<>("Sõber","Arvuti");
         valikukast.setTitle("Vali vastane");
         valikukast.setHeaderText("Kelle vastu mängida soovid?");
-        valikukast.setOnCloseRequest(event -> {
-            System.exit(0);
-        });
         valikukast.showAndWait();
         Võidukontroll.whoStarts();
-
+        String valik = valikukast.getResult();
 
         //primaryStage.addEventHandler(KeyEvent);
+        if (valik == null)
+            System.exit(0);
 
-        if (valikukast.getResult().equals("Sõber")){
+        else if (valik.equals("Sõber")){
             try(Logipidaja a = new Logipidaja("mängulogi.txt")){
                 a.write("Alustati uue mänguga: vastaseks Sõber"+ System.lineSeparator());
             };
             gameTypeFriend(laius, kõrgus, primaryStage, valikukast);
 
         }
-        if (valikukast.getResult().equals("Arvuti")){
+        else if (valik.equals("Arvuti")){
             System.out.println("See funktsionaalsus puudub.");
             System.exit(0);
         }
