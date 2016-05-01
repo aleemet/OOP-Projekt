@@ -2,16 +2,14 @@
  * Created by Alar on 07/04/2016.
  */
 
-import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
@@ -30,11 +28,11 @@ public class GUI extends Application {
     private double nupuKõrgus = 30;
     private static List<Button> nupuvajutused = new ArrayList<>();
 
-    private BackgroundImage pilt = new BackgroundImage(new Image("blank.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT );
+    private BackgroundImage pilt = new BackgroundImage(new Image("blank.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(100,100,true,true,true,false) );
     private Background tühi = new Background(pilt);
-    private BackgroundImage piltrist = new BackgroundImage(new Image("cross.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT );
+    private BackgroundImage piltrist = new BackgroundImage(new Image("cross.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(100,100,true,true,true,false) );
     private Background rist = new Background(piltrist);
-    private BackgroundImage piltring = new BackgroundImage(new Image("circle.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT );
+    private BackgroundImage piltring = new BackgroundImage(new Image("circle.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(100,100,true,true,true,false) );
     private Background ring = new Background(piltring);
     private Label kelleKäik = new Label("");
 
@@ -71,12 +69,20 @@ public class GUI extends Application {
 
     private GridPane ruudustik() throws IOException{
         GridPane nupud = new GridPane();
+        ColumnConstraints tulp1 = new ColumnConstraints();
+        tulp1.setPercentWidth(33.3);
+        ColumnConstraints tulp2 = new ColumnConstraints();
+        tulp2.setPercentWidth(33.3);
+        ColumnConstraints tulp3 = new ColumnConstraints();
+        tulp3.setPercentWidth(33.3);
+        BackgroundImage pilt = new BackgroundImage(new Image("mänguväljak2.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(100,100,true,true,true,false) );
+        Background taust = new Background(pilt);
+        nupud.setBackground(taust);
 
         for (int i = 0; i<3; i++){
             for (int j = 0; j<3; j++){
                 Button a = new Button();
-                a.setPrefSize(135, 135);
-                a.setBackground(tühi);
+                a.setPrefSize(150, 150);
                 a.setOnAction(event-> {
                     if (Võidukontroll.isPlayer1Turn() && a.getBackground() == tühi && !Võidukontroll.isPlayer1Won() && !Võidukontroll.isPlayer2Won() ){
                         try {
@@ -98,7 +104,7 @@ public class GUI extends Application {
                     }
                 });
                 nupud.add(a, i, j);
-                nupud.setMargin(a, new Insets(12,11,12,12));
+                nupud.setMargin(a, new Insets(5,5,5,5));
                 nupud.setOnMouseClicked(event ->{
                     FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.01), nupud);
                     fadeTransition.setFromValue(1);
@@ -110,14 +116,13 @@ public class GUI extends Application {
 
             }
         }
-        BackgroundImage pilt = new BackgroundImage(new Image("mänguväljak2.png" ),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT );
-        Background taust = new Background(pilt);
-        nupud.setBackground(taust);
+
 
         return nupud;
     }
     private GridPane valikud(Stage primaryStage, ChoiceDialog valikukast) throws IOException{
         GridPane nupud = new GridPane();
+
         setKelleKäik();
         kelleKäik.setPrefSize(nupuLaius, nupuKõrgus);
         nupud.setMargin(kelleKäik, new Insets(3,3,3,3));
@@ -206,7 +211,6 @@ public class GUI extends Application {
         võtaTagasi.setPrefSize(nupuLaius, nupuKõrgus);
         nupud.setMargin(võtaTagasi, new Insets(3,3,3,3));
         nupud.add(võtaTagasi, 0,3);
-
         return nupud;
     }
 
@@ -221,35 +225,58 @@ public class GUI extends Application {
         Group root = new Group();
         GridPane gp = new GridPane();
         GridPane mänguväli = ruudustik();
+        mänguväli.setMinSize(150, 150);
         gp.add(mänguväli, 0,0);
         GridPane valikud = valikud(primaryStage, valikukast);
+
         gp.add(valikud, 1,0);
         root.getChildren().addAll(gp);
         Scene scene = new Scene(root, laius, kõrgus);
-        scene.setOnKeyReleased(event -> {
-            if (event.getCode() == KeyCode.ESCAPE){
-                väljuMängust().showAndWait().ifPresent(response -> {
-                    if (response == ButtonType.YES) {
-                        primaryStage.close();
-                        System.exit(1);
-                    }else {
-                        väljuMängust().close();
-                    }
-                });
+
+        scene.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+                mänguväli.setPrefWidth((double)newSceneWidth-nupuLaius-5);
+
             }
         });
+        scene.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+                mänguväli.setPrefHeight((double)newSceneHeight);
+            }
+        });
+
+        scene.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ESCAPE){
+                väljuMängust(primaryStage);
+            }
+        });
+
         primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(event ->{
+            väljuMängust(primaryStage);
+        });
+        primaryStage.setMinHeight(195);
+        primaryStage.setMinWidth(275);
+        primaryStage.setMaxHeight(kõrgus+8);
+        primaryStage.setMaxWidth(laius-12);
         primaryStage.show();
+
     }
 
-    public Dialog väljuMängust(){
+    public void väljuMängust(Stage primaryStage){
         Dialog väljuMängust = new Dialog();
         väljuMängust.setTitle("Väljumine");
         väljuMängust.setHeaderText("Kas soovite mängust väljuda?");
         väljuMängust.getDialogPane().getButtonTypes().add(ButtonType.YES);
         väljuMängust.getDialogPane().getButtonTypes().add(ButtonType.NO);
-
-        return väljuMängust;
+        väljuMängust.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                primaryStage.close();
+                System.exit(1);
+            } else {
+                väljuMängust.close();
+            }
+        });
     }
 
 
@@ -258,11 +285,13 @@ public class GUI extends Application {
         ChoiceDialog<String> valikukast = new ChoiceDialog<>("Sõber","Arvuti");
         valikukast.setTitle("Vali vastane");
         valikukast.setHeaderText("Kelle vastu mängida soovid?");
+        valikukast.setOnCloseRequest(event ->{
+            //väljuMängust(primaryStage);
+        });
         valikukast.showAndWait();
         Võidukontroll.whoStarts();
         String valik = valikukast.getResult();
 
-        //primaryStage.addEventHandler(KeyEvent);
         if (valik == null)
             System.exit(0);
 
