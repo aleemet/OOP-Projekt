@@ -1,3 +1,5 @@
+import javafx.scene.control.ChoiceDialog;
+
 import java.io.IOException;
 import java.util.Random;
 
@@ -15,7 +17,12 @@ public class Võidukontroll {
     private static int currentCol;
     private static boolean player1Turn = false;
     private static int moveCount = 1;
+    private static boolean AIstarts = false;
 
+
+    public static boolean isAIstarts() {
+        return AIstarts;
+    }
 
     public static boolean isPlayer1Won() {
         return player1Won;
@@ -138,7 +145,7 @@ public class Võidukontroll {
         moveCount++;
     }
 
-    public static void whoStarts(){
+    public static void whoStarts(String valik){
         Random generaator = new Random();
         if (generaator.nextInt(101)%2 == 0) {
             player1Turn = false;
@@ -148,7 +155,10 @@ public class Võidukontroll {
             player1Turn = true;
             //System.out.println("X alustab.");
         }
+        if (valik.equals("Arvuti") && generaator.nextInt(101)%2 == 0){
+                AIstarts = true;
+        }
+        else AIstarts = false;
+        //System.out.println(AIstarts);
     }
-
-
 }

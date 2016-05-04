@@ -13,10 +13,10 @@ public class Mänguväli {
     private static List<String> käiguAjad = new ArrayList<>();
 
     // Meetod väljaku värskendamiseks ja väljastamiseks
-    public static void updateGrid() throws IOException{
+    public static void updateGrid(boolean AIifTrue) throws IOException{
         field[Võidukontroll.getCurrentRow()][Võidukontroll.getCurrentCol()] = Võidukontroll.isPlayer1Turn()?1:2;
         try(Logipidaja a = new Logipidaja("mängulogi.txt")){
-            a.write((Võidukontroll.isPlayer1Turn()?"X":"O") + " sooritas käigu koordinaatidele " + Võidukontroll.getCurrentRow()+", " +  Võidukontroll.getCurrentCol() + ": "+System.lineSeparator());
+            a.write((Võidukontroll.isPlayer1Turn()?"X":"O")+ (AIifTrue?" ehk arvuti":"") + " sooritas käigu koordinaatidele " + Võidukontroll.getCurrentRow()+", " +  Võidukontroll.getCurrentCol() + ": "+System.lineSeparator());
             käiguAjad.add(a.getTimeStamp());
             a.write(System.lineSeparator()+grid()+System.lineSeparator());
 
