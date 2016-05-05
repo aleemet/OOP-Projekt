@@ -3,7 +3,9 @@ import java.io.IOException;
 /**
  * Created by Alar on 12/03/2016.
  */
-public class Risti_Võit extends Võidukontroll {
+
+// Klass veergude ja ridade kontrolliks.
+public class RistiVõit extends Võidukontroll {
 
     // Kontrollib rida või veergu, sõltuvalt "row_if_true" tõeväärtusest.
     // Kui row_if_true on tõene, kontrollitakse ridu, vastasel juhul veerge.

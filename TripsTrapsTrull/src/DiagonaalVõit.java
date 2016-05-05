@@ -3,7 +3,9 @@ import java.io.IOException;
 /**
  * Created by Alar on 12/03/2016.
  */
-public class Diagonaalne_Võit extends Võidukontroll {
+
+// Klass diagonaalide kontrollimiseks.
+public class DiagonaalVõit extends Võidukontroll {
 
     // Kontrollib esimest või teist diagonaali, sõltuvalt "first_if_true" tõeväärtusest.
     // Kui first_if_true on tõene, siis kontrollitakse peadiagonaali, vastasel juhul kõrvaldiagonaali.
@@ -31,20 +33,16 @@ public class Diagonaalne_Võit extends Võidukontroll {
             return;
         }
 
-
         // Kontrollib millise diagonaaliga on tegemist
         if (onFirstDiagonal) {
             whosTurn();
             diagonalCheck(true);
         }
         whoWon();
-
         if (onSecondDiagonal) {
             whosTurn();
             diagonalCheck(false);
             whoWon();
         }
-
-
     }
 }

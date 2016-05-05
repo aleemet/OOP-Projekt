@@ -6,18 +6,20 @@ import java.util.Random;
 /**
  * Created by Alar on 12/03/2016.
  */
+
+// Klass üldiseks mängu võitja välja selgitamiseks.
 public class Võidukontroll {
 
-    // Võidutingimuste isendid
+    // Mängu seis.
     private static boolean player1Won = false;
     private static boolean player2Won = false;
     private static boolean isDraw = false;
-    // Võidukontrolli isendid
-    private static int currentRow;
-    private static int currentCol;
-    private static boolean player1Turn = false;
-    private static int moveCount = 1;
-    private static boolean AIstarts = false;
+
+    private static int currentRow; // viimati sisestatud rea koordinaat
+    private static int currentCol; // viimati sisestatud veeru koordinaat
+    private static boolean player1Turn = false; // Kumma märgi kord. X kord, kui true
+    private static int moveCount = 1; // Käikude arv
+    private static boolean AIstarts = false; // Arvuti alustab
 
 
     public static boolean isAIstarts() {
@@ -78,21 +80,19 @@ public class Võidukontroll {
 
     // Võitja määramine
     public static void whoWon() throws IOException{
+        // Võitja määramise järel teeme vastava sissekande logisse ja kuvame vastava teate.
         if (player1Won) {
             GUI.teatekast("X võitis", "X võitis! Võid alustada uut mängu.");
             try(Logipidaja a = new Logipidaja("mängulogi.txt")){
                 a.write("Käigu järel oli võitja mängija X." + System.lineSeparator()+ System.lineSeparator());
 
-            };
-
-            //System.out.println("Mängija 1 võitis.");
-            //System.exit(0);
+            }
         }
         else if (player2Won) {
             GUI.teatekast("O võitis!", "O võitis! Võid alustada uut mängu.");
             try(Logipidaja a = new Logipidaja("mängulogi.txt")){
                 a.write("Käigu järel oli võitja mängija O." + System.lineSeparator()+ System.lineSeparator());
-            };
+            }
         }
     }
 
@@ -108,11 +108,11 @@ public class Võidukontroll {
     // Kontrollime, kas keegi võitis.
     public static void checkVictory() throws IOException{
         // Horisontaal- ja vertikaalkontroll
-        Risti_Võit.checkCrossVictory();
+        RistiVõit.checkCrossVictory();
 
         // Diagonaalkontroll
         if (!player1Won && !player2Won)
-            Diagonaalne_Võit.checkDiagonalVictory();
+            DiagonaalVõit.checkDiagonalVictory();
     }
 
     // Kontrollime, kas tegemist on viigiga
@@ -132,19 +132,15 @@ public class Võidukontroll {
         if(!player1Won && !player2Won) {
             checkDraw();
         }
-        //if(!player1Won && !player2Won && !isDraw){
-            //try(Logipidaja a = new Logipidaja("mängulogi.txt")){
-            //    a.write("Mäng jätkub."+ System.lineSeparator()+""+ System.lineSeparator());
-            //};
-        //}
     }
 
-    // Lidame iga käigu järel käikude arvule ühe juurde.
+    // Liidame iga käigu järel käikude arvule ühe juurde.
     public static void changeMove() {
         player1Turn = !player1Turn;
         moveCount++;
     }
 
+    // Määrame alustaja märgi. Kui valiti vastaseks arvuti, määrame, kas alustab arvuti või mängija.
     public static void whoStarts(String valik){
         Random generaator = new Random();
         if (generaator.nextInt(101)%2 == 0) {
@@ -156,9 +152,9 @@ public class Võidukontroll {
             //System.out.println("X alustab.");
         }
         if (valik.equals("Arvuti") && generaator.nextInt(101)%2 == 0){
-                AIstarts = true;
+            AIstarts = true;
         }
         else AIstarts = false;
-        //System.out.println(AIstarts);
+
     }
 }
